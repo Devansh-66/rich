@@ -22,4 +22,8 @@ if [ -z "$OUTPUT" ]; then
   OUTPUT="results.xml"
 fi
 
-pytest tests/test_panel_columns_expand.py --junitxml="$OUTPUT"
+if [ "$MODE" = "base" ]; then
+  pytest tests/test_panel_columns_expand.py --junitxml="$OUTPUT"
+else
+  pytest tests/test_panel_columns_expand.py --junitxml="$OUTPUT"
+fi

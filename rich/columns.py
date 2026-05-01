@@ -170,6 +170,23 @@ class Columns(JupyterMixin):
             add_row(*row)
         yield table
 
+    def __rich_measure__(
+        self, console: "Console", options: "ConsoleOptions"
+    ) -> "Measurement":
+        from rich.measure import Measurement
+        
+        max_width = options.max_width
+        total_width = 0
+        
+        for renderable in self.renderables:
+            measurement = Measurement.get(console, options, renderable)
+            total_width += measurement.maximum
+            
+        if self.renderables:
+            total_width += (len(self.renderables) - 1) * self.padding
+            
+        total_width = min(total_width, max_width)
+        return Measurement(total_width, total_width)
 
 if __name__ == "__main__":  # pragma: no cover
     import os

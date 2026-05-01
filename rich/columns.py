@@ -173,20 +173,25 @@ class Columns(JupyterMixin):
     def __rich_measure__(
         self, console: "Console", options: "ConsoleOptions"
     ) -> "Measurement":
-        from rich.measure import Measurement
-        
-        max_width = options.max_width
+        from rich.padding import Padding
+
         total_width = 0
-        
+        max_column_width = 0
+
+        # Unpack the padding tuple to get just the left and right padding
+        _, pad_right, _, pad_left = Padding.unpack(self.padding)
+        horizontal_padding = pad_left + pad_right
+
         for renderable in self.renderables:
             measurement = Measurement.get(console, options, renderable)
             total_width += measurement.maximum
-            
+            max_column_width = max(max_column_width, measurement.minimum)
+
         if self.renderables:
-            total_width += (len(self.renderables) - 1) * self.padding
-            
-        total_width = min(total_width, max_width)
-        return Measurement(total_width, total_width)
+            total_width += (len(self.renderables) - 1) * horizontal_padding
+
+        total_width = min(total_width, options.max_width)
+        return Measurement(max_column_width, total_width)
 
 if __name__ == "__main__":  # pragma: no cover
     import os

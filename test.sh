@@ -23,8 +23,7 @@ if [ -z "$OUTPUT" ]; then
 fi
 
 if [ "$MODE" = "base" ]; then
-  echo "def test_dummy(): pass" > test_dummy.py
-  pytest test_dummy.py --junitxml="$OUTPUT"
+  pytest tests/test_panel.py --junitxml="$OUTPUT"
 else
   pytest tests/test_panel_columns_expand.py --junitxml="$OUTPUT"
 fi
